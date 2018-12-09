@@ -2,6 +2,7 @@ const settings = require("./botsettings.json");
 const discord = require("discord.js");
 const fs = require("fs");
 const msgconditions = require("./msgconditions.js");
+const helpcommand = require("./help-command.js");
 
 const prefix = settings.prefix;
 
@@ -25,8 +26,6 @@ fs.readdir("./commands", (err, files) => {
     bot.commands.set(com.info.name, com);
   });
 });
-
-console.log(bot.commands);
 
 bot.on("ready", async () => {
   console.log(`Running ${bot.user.username}...`);
@@ -53,8 +52,13 @@ bot.on("message", async message => {
   let args = message.content.split(" ");
   let cmd = args[0];
   args = args.slice(1);
+
   if (!cmd.startsWith(prefix)) return;
 
+  // Check if it's the help command
+  if (cmd === `${prefix}help`) helpcommand.run(message, args, bot.commands);
+
+  // Check if it's a modular command
   for (var [i, v] of bot.commands) {
     if (cmd === `${prefix}${v.info.command}`) {
       try {
