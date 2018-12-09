@@ -124,5 +124,17 @@ module.exports.verify = message => {
 module.exports.info = {
   name: "Play Music From YouTube",
   command: "music",
-  usage: "!music"
+  usage: `!music {option} {params...}
+  
+  Options:
+  - !music add {url}
+    Adds the song located at the URL specified to the song queue.
+  - !music list
+    Lists all the songs currently in the queue.
+  - !music skip
+    Skips the currently playing track.
+  - !music pause
+    Pauses playback.
+  - !music play
+    Resumes playback.`
 };
