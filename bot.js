@@ -1,10 +1,11 @@
 const settings = require("./botsettings.json");
 const discord = require("discord.js");
 const fs = require("fs");
-const msgconditions = require("./msgconditions.js");
-const helpcommand = require("./help-command.js");
 
 const prefix = settings.prefix;
+
+const msgconditions = require("./msgconditions.js");
+const helpcommand = require("./help-command.js")(prefix);
 
 const bot = new discord.Client();
 bot.commands = new Map();
@@ -22,7 +23,7 @@ fs.readdir("./commands", (err, files) => {
   }
 
   jsfiles.forEach((f, i) => {
-    let com = require(`./commands/${f}`);
+    let com = require(`./commands/${f}`)(prefix);
     bot.commands.set(com.info.name, com);
   });
 });
