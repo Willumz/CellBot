@@ -4,6 +4,8 @@ const fs = require("fs");
 
 const prefix = settings.prefix;
 
+const ConfigClass = require("./ConfigClass.js");
+
 const msgconditions = require("./msgconditions.js");
 const helpcommand = require("./help-command.js")(prefix);
 
@@ -19,7 +21,7 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
 
   // Iterate through files
   for (var i of files) {
-    if (i.name.endsWith(".js")) {
+    if (i.name.endsWith(".js") && i.isFile()) {
       // Get name of config file for command
       let conf = i.name.split(".");
       conf.pop();
@@ -30,7 +32,10 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
         var config = require(`./commands/${conf}`);
         // If command enabled
         if (config.enabled === true) {
-          let com = require(`./commands/${i.name}`)(prefix);
+          let com = require(`./commands/${i.name}`)(
+            prefix,
+            new ConfigClass(`./commands/${conf}`)
+          );
           com.config = config;
           bot.commands.set(com.info.name, com);
         }
@@ -48,9 +53,10 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
             console.error(err);
             return;
           }
+
           // Iterate through files
           for (var ii of files2) {
-            if (ii.name.endsWith(".js")) {
+            if (ii.name.endsWith(".js") && ii.isFile()) {
               // Get name of config file for command
               let conf = ii.name.split(".");
               conf.pop();
@@ -62,7 +68,8 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
                 // If command enabled
                 if (config.enabled === true) {
                   let com = require(`./commands/${dirname.name}/${ii.name}`)(
-                    prefix
+                    prefix,
+                    new ConfigClass(`./commands/${dirname.name}/${conf}`)
                   );
                   com.config = config;
                   bot.commands.set(com.info.name, com);

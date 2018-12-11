@@ -1,6 +1,6 @@
 const discord = require("discord.js");
 
-module.exports = function(prefix) {
+module.exports = function(prefix, config) {
   var exports = {};
   exports.run = async (bot, message, args) => {
     let embed = new discord.RichEmbed()
