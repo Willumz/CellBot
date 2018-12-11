@@ -1,7 +1,7 @@
 const discord = require("discord.js");
 const ytdl = require("ytdl-core");
 
-module.exports = function(prefix) {
+module.exports = function(prefix, config) {
   var exports = {};
 
   exports.conns = {};
@@ -9,9 +9,6 @@ module.exports = function(prefix) {
   exports.streamOptions = { seek: 0, volume: 1 };
 
   exports.run = async (bot, message, args) => {
-    //   if (exports.conns == null) exports.conns = {};
-    //   if (dispatchers == null) var dispatchers = {};
-    //   if (streamOptions == null) var streamOptions = { seek: 0, volume: 1 };
     var conns = exports.conns;
     var dispatchers = exports.dispatchers;
     var streamOptions = exports.streamOptions;
