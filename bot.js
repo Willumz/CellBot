@@ -10,22 +10,77 @@ const helpcommand = require("./help-command.js")(prefix);
 const bot = new discord.Client();
 bot.commands = new Map();
 
-fs.readdir("./commands", (err, files) => {
+// Read all files from ./commands
+fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
   if (err) {
     console.error(err);
     return;
   }
 
-  let jsfiles = files.filter(f => f.split(".").pop() === "js");
-  if (jsfiles.length <= 0) {
-    console.log("No commands found in ./commands");
-    return;
+  // Iterate through files
+  for (var i of files) {
+    if (i.name.endsWith(".js")) {
+      // Get name of config file for command
+      let conf = i.name.split(".");
+      conf.pop();
+      conf.push("json");
+      conf = conf.join(".");
+      // If config file exists
+      if (files.map(f => f.name).indexOf(conf) > -1) {
+        var config = require(`./commands/${conf}`);
+        // If command enabled
+        if (config.enabled === true) {
+          let com = require(`./commands/${i.name}`)(prefix);
+          com.config = config;
+          bot.commands.set(com.info.name, com);
+        }
+      } else console.log(`Found no config file (${conf}) for ${i.name}`);
+    }
+    // If directory
+    if (i.isDirectory()) {
+      var dirname = i;
+      // Read files
+      fs.readdir(
+        `./commands/${i.name}`,
+        { withFileTypes: true },
+        (err, files2) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          // Iterate through files
+          for (var ii of files2) {
+            if (ii.name.endsWith(".js")) {
+              // Get name of config file for command
+              let conf = ii.name.split(".");
+              conf.pop();
+              conf.push("json");
+              conf = conf.join(".");
+              // If config file exists
+              if (files2.map(f => f.name).indexOf(conf) > -1) {
+                var config = require(`./commands/${dirname.name}/${conf}`);
+                // If command enabled
+                if (config.enabled === true) {
+                  let com = require(`./commands/${dirname.name}/${ii.name}`)(
+                    prefix
+                  );
+                  com.config = config;
+                  bot.commands.set(com.info.name, com);
+                }
+              } else
+                console.log(`Found no config file (${conf}) for ${ii.name}`);
+            }
+          }
+        }
+      );
+    }
   }
 
-  jsfiles.forEach((f, i) => {
-    let com = require(`./commands/${f}`)(prefix);
-    bot.commands.set(com.info.name, com);
-  });
+  // for (var i of files)
+  //   jsfiles.forEach((f, i) => {
+  //     let com = require(`./commands/${f}`)(prefix);
+  //     bot.commands.set(com.info.name, com);
+  //   });
 });
 
 bot.on("ready", async () => {
