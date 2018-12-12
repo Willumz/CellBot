@@ -1,7 +1,7 @@
 const discord = require("discord.js");
 const ytdl = require("ytdl-core");
 
-module.exports = function(prefix, config) {
+module.exports = function(prefix, config, communalfolder) {
   var exports = {};
 
   exports.conns = {};

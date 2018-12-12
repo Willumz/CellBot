@@ -12,6 +12,12 @@ const helpcommand = require("./help-command.js")(prefix);
 const bot = new discord.Client();
 bot.commands = new Map();
 
+const communalfolder = null;
+// Assign communal if it exists.
+if (fs.existsSync("./communal")) {
+  communalfolder = "./communal";
+}
+
 // Read all files from ./commands
 fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
   if (err) {
@@ -37,7 +43,7 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
             new ConfigClass(`./commands/${conf}`)
           );
           com.config = config;
-          bot.commands.set(com.info.name, com);
+          bot.commands.set(com.info.name, com, communalfolder);
         }
       } else console.log(`Found no config file (${conf}) for ${i.name}`);
     }
@@ -72,7 +78,7 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
                     new ConfigClass(`./commands/${dirname.name}/${conf}`)
                   );
                   com.config = config;
-                  bot.commands.set(com.info.name, com);
+                  bot.commands.set(com.info.name, com, communalfolder);
                 }
               } else
                 console.log(`Found no config file (${conf}) for ${ii.name}`);
