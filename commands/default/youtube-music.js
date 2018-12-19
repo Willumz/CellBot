@@ -26,38 +26,40 @@ module.exports = function(prefix, config, communalfolder) {
       // ADD TRACK
       if (args[1] != null) {
         var url = args[1];
-        if (conns[voiceChannel] != null) {
-          conns[voiceChannel].push(url);
-          message.channel.send(
-            `<@${
-              message.author.id
-            }>, Added to queue! View the queue with '${prefix}music list'.`
-          );
-        } else {
-          conns[voiceChannel] = [url];
+        if (ytdl.validateURL(url)) {
+          if (conns[voiceChannel] != null) {
+            conns[voiceChannel].push(url);
+            message.channel.send(
+              `<@${
+                message.author.id
+              }>, Added to queue! View the queue with '${prefix}music list'.`
+            );
+          } else {
+            conns[voiceChannel] = [url];
 
-          // NEW STREAM
-          voiceChannel
-            .join()
-            .then(connection => {
-              console.log("joined channel");
-              playMusic(
-                conns[voiceChannel][0],
-                voiceChannel,
-                connection,
-                conns,
-                dispatchers,
-                streamOptions
-              );
-            })
-            .catch(err => console.log(err));
-          //END NEW STREAM
-          message.channel.send(
-            `<@${
-              message.author.id
-            }>, Added to queue! View the queue with '${prefix}music list'.`
-          );
-        }
+            // NEW STREAM
+            voiceChannel
+              .join()
+              .then(connection => {
+                console.log("joined channel");
+                playMusic(
+                  conns[voiceChannel][0],
+                  voiceChannel,
+                  connection,
+                  conns,
+                  dispatchers,
+                  streamOptions
+                );
+              })
+              .catch(err => console.log(err));
+            //END NEW STREAM
+            message.channel.send(
+              `<@${
+                message.author.id
+              }>, Added to queue! View the queue with '${prefix}music list'.`
+            );
+          }
+        } else message.channel.send(`<@${message.author.id}>, that is not a valid YouTube URL.`);
       } else {
         message.channel.send(`<@${message.author.id}>, please specify a URL.`);
       }
