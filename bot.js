@@ -12,9 +12,10 @@ const helpcommand = require("./help-command.js")(prefix);
 const bot = new discord.Client();
 bot.commands = new Map();
 
-const communalfolder = null;
+var communalfolder = null;
 // Assign communal if it exists.
-if (fs.existsSync("./communal")) {
+if (fs.existsSync("./communal"))
+{
   communalfolder = "./communal";
 }
 
