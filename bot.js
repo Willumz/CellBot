@@ -50,39 +50,45 @@ fs.readdir("./commands", { withFileTypes: true }, (err, files) => {
     }
     // If directory
     if (i.isDirectory()) {
-      var dirname = i;
+      var dirname = i.name;
       // Read files
       var files2 = fs.readdirSync(
-        `./commands/${i.name}`,
-        { withFileTypes: true });
-
+        `./commands/${dirname}`,
+        { withFileTypes: true },
+        //(err, files2) => {
+        //  if (err) {
+        //    console.error(err);
+        //    return;
+        //  }
+      )
           // Iterate through files
-      for (var ii of files2) {
-        if (ii.name.endsWith(".js") && ii.isFile()) {
-          // Get name of config file for command
-          let conf = ii.name.split(".");
-          conf.pop();
-          conf.push("json");
-          conf = conf.join(".");
-          // If config file exists
-          if (files2.map(f => f.name).indexOf(conf) > -1) {
-            var config = require(`./commands/${dirname.name}/${conf}`);
-            // If command enabled
-            if (config.enabled === true) {
-              let com = require(`./commands/${dirname.name}/${ii.name}`)(
-                prefix,
-                new ConfigClass(`./commands/${dirname.name}/${conf}`)
-              );
-              com.config = config;
-              bot.commands.set(com.info.name, com, communalfolder);
+          for (var ii of files2) {
+            if (ii.name.endsWith(".js") && ii.isFile()) {
+              // Get name of config file for command
+              let conf = ii.name.split(".");
+              conf.pop();
+              conf.push("json");
+              conf = conf.join(".");
+              // If config file exists
+              if (files2.map(f => f.name).indexOf(conf) > -1) {
+                var config = require(`./commands/${dirname}/${conf}`);
+                // If command enabled
+                if (config.enabled === true) {
+                  let com = require(`./commands/${dirname}/${ii.name}`)(
+                    prefix,
+                    new ConfigClass(`./commands/${dirname}/${conf}`)
+                  );
+                  com.config = config;
+                  bot.commands.set(com.info.name, com, communalfolder);
+                }
+              } else
+                console.log(`Found no config file (${conf}) for ${ii.name}`);
             }
-          } else
-            console.log(`Found no config file (${conf}) for ${ii.name}`);
-        }
-      }
+          }
+        
+      //);
     }
   }
-}
 
   // for (var i of files)
   //   jsfiles.forEach((f, i) => {

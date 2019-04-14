@@ -79,9 +79,12 @@ module.exports = function(prefix, config, communalfolder) {
       async function list() {
         var titles = `<@${message.author.id}>,\n`;
         var msg = await message.channel.send(`Loading music list...`);
+        var countoffset = 0;
         for (var i = 0; i < conns[voiceChannel].length; i++) {
-          const info = await ytdl.getInfo(conns[voiceChannel][i]);
-          titles += `${i + 1}. ${info.title} by ${info.author.name}\n`;
+          try {
+            const info = await ytdl.getInfo(conns[voiceChannel][i]);
+            titles += `${i + 1 - countoffset}. ${info.title} by ${info.author.name}\n`;
+          } catch { countoffset++; }
         }
         msg.edit(titles);
       }
