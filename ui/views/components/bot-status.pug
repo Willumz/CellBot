@@ -1,0 +1,8 @@
+
+div
+    script(src="scripts/bot-actions/status.js")
+    button(id="status-start" onclick="startBot()") Start
+    button(id="status-stop" onclick="stopBot()" disabled) Stop
+    p(id="status-running")
+    p(id="status-runlog")
+    button(onclick="getRunLog(); isRunning()") Refresh

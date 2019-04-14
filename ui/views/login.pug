@@ -1,0 +1,17 @@
+doctype html
+
+html
+    head
+        title Login - CellBot
+    body
+        h1 Login to CellBot UI
+        form(method='POST' action='/login-session')
+            text Username:&nbsp
+            input(type="text" name="user")
+            br
+            br
+            text Password:&nbsp
+            input(type="password" name="pwd")
+            br
+            br
+            input(type="submit" value="Login")
