@@ -1,5 +1,8 @@
 # CellBot
 
+WARNING: The bot has not been extensively tested, and as such may be unstable.
+Please also note that the UI is not currently useable, and is still heavily in development.
+
 Contents:
 
 - [About](#about)
