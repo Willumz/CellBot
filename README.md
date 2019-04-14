@@ -7,7 +7,6 @@ Contents:
 - [Get Started](#get-started)
 - [Documentation](#documentation)
 
-## About
 
 CellBot is a multipurpose bot for Discord.
 
